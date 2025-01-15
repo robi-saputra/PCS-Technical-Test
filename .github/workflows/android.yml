@@ -3,7 +3,7 @@ name: Android CI
 on:
   push:
     tags:
-      - 'test*' # Trigger workflow only on tag pushes (e.g., v1.0.0)
+      - 'v*' # Trigger workflow only on tag pushes (e.g., v1.0.0)
 
 jobs:
   build:
