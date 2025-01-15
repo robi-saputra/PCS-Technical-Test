@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Technical Test</string>
+    <string name="first_name">First Name</string>
+    <string name="colon">:</string>
+    <string name="last_name">Last Name</string>
+    <string name="join">Join</string>
+    <string name="time_elapsed">Time Elapsed</string>
+    <string name="address">Address</string>
+    <string name="avatar">avatar</string>
+    <string name="name">Name</string>
+    <string name="full_name">Johnathan Doe Roger</string>
+    <string name="street">Street 12</string>
+    <string name="dummy_first_name">John</string>
+    <string name="dummy_last_name">Doe</string>
+    <string name="dummy_input">##-###-####</string>
+</resources>
