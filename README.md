@@ -1,6 +1,7 @@
 # PCS-Technical-Test
-Android - PCS Technical Test
+
 ![My Image](mockup.png)
+<br>Mockup
 
 ## Diskripsi
 Proyek ini merupakan contoh aplikasi Android modern yang mengutamakan efisiensi, skalabilitas, dan kemudahan pengujian.
@@ -13,7 +14,7 @@ Tujuan dari project ini adalah sebagai berikut:
 
 ## Fitur Utama
 > * Dagger HILT
-> * MVVM architecture (include usecase, repository)
+> * MVVM architecture
 > * Retrofit
 > * ViewBinding
-> * Multi Module Application3
+> * Multi Module Application
