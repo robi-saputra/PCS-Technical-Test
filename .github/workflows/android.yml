@@ -3,22 +3,14 @@ name: Android CI
 on:
   push:
     tags:
-      - 'v*' # Trigger workflow only on tag pushes (e.g., v1.0.0)
+      - 'v*' # Trigger the workflow only on tag pushes (e.g., v1.0.0)
 
 jobs:
   build:
-    runs-on: self-hosted
 
-    env:
-      #JAVA_HOME: /usr/lib/jvm/java-11-openjdk-amd64
-      GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+    runs-on: ubuntu-latest
 
     steps:
-      # Authenticate Fit
-      - name: Authenticate Git
-        run: |
-          git config --global url."https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/".insteadOf "https://github.com/"
-          
       # Checkout the code
       - name: Checkout code
         uses: actions/checkout@v3
@@ -28,49 +20,48 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
-          java-version: '17'
+          java-version: '17' # Specify the version your project uses
 
       # Cache Gradle dependencies
       - name: Cache Gradle dependencies
         uses: actions/cache@v3
         with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
+          path: ~/.gradle/caches
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      # Grant gradlew permissions
+      # Grant gradlew permission
       - name: Grant execute permission for gradlew
+        if: runner.os != 'Windows'
         run: chmod +x gradlew
 
       # Set up Android SDK
       - name: Set up Android SDK
         uses: android-actions/setup-android@v2
         with:
-          api-level: 35
-          build-tools: '35.0.0'
-          target: 'android-35'
+          api-level: 33 # Target API level
+          build-tools: '33.0.2'
+          target: 'android-33'
 
       # Build Debug APK
       - name: Build Debug APK
         run: ./gradlew assembleDebug
-        env:
-          ACTIONS_STEP_DEBUG: true
+
+      - name: Debug properties
+        run: echo "Store file ${{ secrets.ANDROID_KEYSTORE }}" && echo "Alias ${{ secrets.ANDROID_KEY_ALIAS }}"
 
       # Decode keystore
       - name: Decode keystore
         run: echo "${{ secrets.ANDROID_KEYSTORE }}" | base64 --decode > keystore-project.jks
 
-      # Build Signed Release APK
-      - name: Build Signed Release APK
-        run: |
-          ./gradlew assembleRelease \
-          -Pandroid.injected.signing.store.file=keystore-project.jks \
-          -Pandroid.injected.signing.store.password=${{ secrets.ANDROID_KEYSTORE_PASSWORD }} \
-          -Pandroid.injected.signing.key.alias=${{ secrets.ANDROID_KEY_ALIAS }} \
-          -Pandroid.injected.signing.key.password=${{ secrets.ANDROID_KEY_PASSWORD }}
+      # Build signed Release APK
+      - name: Build signed release APK
+        run: ./gradlew assembleRelease -Pandroid.injected.signing.store.file=keystore-project.jks -Pandroid.injected.signing.store.password=${{ secrets.ANDROID_KEYSTORE_PASSWORD }} -Pandroid.injected.signing.key.alias=${{ secrets.ANDROID_KEY_ALIAS }} -Pandroid.injected.signing.key.password=${{ secrets.ANDROID_KEY_PASSWORD }}
+        env:
+          ACTIONS_STEP_DEBUG: true
+
+
 
       # Extract package name from AndroidManifest.xml
       - name: Extract Package Name
@@ -94,14 +85,16 @@ jobs:
         id: create_release
         uses: actions/create-release@v1
         with:
-          tag_name: ${{ github.ref_name }}
+          tag_name: ${{ github.ref_name }} # Use the pushed tag as the release tag
           release_name: "Release ${{ github.ref_name }}"
           body: |
-            ## Release Details
+            Release details for version ${{ github.ref_name }}.
             - Built on: ${{ github.event.head_commit.timestamp }}
             - Commit: ${{ github.event.head_commit.message }}
           draft: false
           prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
       # Upload Renamed Debug APK
       - name: Upload Renamed Debug APK
@@ -111,6 +104,8 @@ jobs:
           asset_path: app/build/outputs/apk/debug/${{ env.PACKAGE_NAME }}-debug.apk
           asset_name: ${{ env.PACKAGE_NAME }}-debug.apk
           asset_content_type: application/vnd.android.package-archive
+        env:
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
       # Upload Renamed Release APK
       - name: Upload Renamed Release APK
@@ -120,3 +115,5 @@ jobs:
           asset_path: app/build/outputs/apk/release/${{ env.PACKAGE_NAME }}-release.apk
           asset_name: ${{ env.PACKAGE_NAME }}-release.apk
           asset_content_type: application/vnd.android.package-archive
+        env:
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
