@@ -3,7 +3,7 @@ name: Android CI
 on:
   push:
     tags:
-      - 'v*' # Trigger workflow only on tag pushes (e.g., v1.0.0)
+      - 'test*' # Trigger workflow only on tag pushes (e.g., v1.0.0)
 
 jobs:
   build:
@@ -14,6 +14,10 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
     steps:
+      - name: Authenticate Git
+        run: |
+          git config --global url."https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/".insteadOf "https://github.com/"
+          
       # Checkout the code
       - name: Checkout code
         uses: actions/checkout@v3
