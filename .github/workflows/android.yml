@@ -65,13 +65,13 @@ jobs:
       - name: Rename Debug APK
         run: |
           REPO_NAME=$(basename $GITHUB_REPOSITORY)
-          mv app/build/outputs/apk/debug/app-debug.apk app/build/outputs/apk/debug/${REPO_NAME}_${{ github.ref_name }}-debug.apk
+          mv app/build/outputs/apk/debug/app-debug.apk app/build/outputs/apk/debug/pcs.technical-test_${{ github.ref_name }}-debug.apk
 
       # Rename Release APK
       - name: Rename Release APK
         run: |
           REPO_NAME=$(basename $GITHUB_REPOSITORY)
-          mv app/build/outputs/apk/release/app-release.apk app/build/outputs/apk/release/${REPO_NAME}_${{ github.ref_name }}-release.apk
+          mv app/build/outputs/apk/release/app-release.apk app/build/outputs/apk/release/pcs.technical-test_${{ github.ref_name }}-release.apk
 
       # Create GitHub Release
       - name: Create GitHub Release
@@ -94,8 +94,8 @@ jobs:
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: app/build/outputs/apk/debug/${{ env.PACKAGE_NAME }}-debug.apk
-          asset_name: ${{ env.PACKAGE_NAME }}-debug.apk
+          asset_path: app/build/outputs/apk/debug/pcs.technical-test_${{ github.ref_name }}-debug.apk
+          asset_name: pcs.technical-test_${{ github.ref_name }}-debug.apk
           asset_content_type: application/vnd.android.package-archive
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
@@ -105,8 +105,8 @@ jobs:
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: app/build/outputs/apk/release/${{ env.PACKAGE_NAME }}-release.apk
-          asset_name: ${{ env.PACKAGE_NAME }}-release.apk
+          asset_path: app/build/outputs/apk/release/pcs.technical-test_${{ github.ref_name }}-release.apk
+          asset_name: pcs.technical-test_${{ github.ref_name }}-release.apk
           asset_content_type: application/vnd.android.package-archive
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
