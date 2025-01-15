@@ -10,10 +10,11 @@ jobs:
     runs-on: self-hosted
 
     env:
-      JAVA_HOME: /usr/lib/jvm/java-11-openjdk-amd64
+      #JAVA_HOME: /usr/lib/jvm/java-11-openjdk-amd64
       GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
 
     steps:
+      # Authenticate Fit
       - name: Authenticate Git
         run: |
           git config --global url."https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/".insteadOf "https://github.com/"
@@ -23,11 +24,11 @@ jobs:
         uses: actions/checkout@v3
 
       # Set up JDK
-      - name: Set up JDK 17
+      - name: Set up JDK 11
         uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
-          java-version: '17'
+          java-version: '11'
 
       # Cache Gradle dependencies
       - name: Cache Gradle dependencies
