@@ -66,11 +66,13 @@ jobs:
         id: extract_package_name
         run: |
           if [ -f app/src/main/AndroidManifest.xml ]; then
+            # Extract the package attribute value from the <manifest> tag
             PACKAGE_NAME=$(awk -F'"' '/<manifest/{for (i=1; i<=NF; i++) if ($i ~ /package/) print $(i+1)}' app/src/main/AndroidManifest.xml)
             if [ -z "$PACKAGE_NAME" ]; then
               echo "Package name not found in AndroidManifest.xml"
               exit 1
             fi
+            echo "PACKAGE_NAME=$PACKAGE_NAME"
             echo "PACKAGE_NAME=$PACKAGE_NAME" >> $GITHUB_ENV
           else
             echo "AndroidManifest.xml not found"
