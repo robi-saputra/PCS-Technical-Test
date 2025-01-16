@@ -81,10 +81,10 @@ jobs:
           tag_name: ${{ github.ref_name }} # Use the pushed tag as the release tag
           release_name: "Release ${{ github.ref_name }}"
           body: |
-            Release details for version ${{ github.ref_name }}.
-            - Built on: ${{ github.event.head_commit.timestamp }}
-            - Commit: 
-              ${{ github.event.head_commit.message }}
+            **Release details for version ${{ github.ref_name }}.**  
+            **Built on:** ${{ github.event.head_commit.timestamp }}
+            **Changes Log:**
+            ${{ github.event.head_commit.message }}
           draft: false
           prerelease: false
         env:
