@@ -1,6 +1,7 @@
 package pcs.technicaltest.robisaputra.ui
 
 import android.os.Bundle
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph
 import androidx.navigation.findNavController
@@ -23,7 +24,9 @@ class MainActivity: BaseActivity<ActivityMainBinding>() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
+        splashScreen.setKeepOnScreenCondition { false }
         navigation()
     }
 

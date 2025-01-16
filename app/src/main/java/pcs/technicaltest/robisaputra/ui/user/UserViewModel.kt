@@ -13,20 +13,22 @@ import javax.inject.Inject
 
 @HiltViewModel
 class UserViewModel @Inject constructor(private val useCase: UserUseCase): ViewModel() {
-
-    private val _users = MutableStateFlow<NetworkState<List<User>>>(NetworkState.Loading())
+    private val _users = MutableStateFlow<NetworkState<List<User>>>(NetworkState.Loading)
     val users: StateFlow<NetworkState<List<User>>> get() = _users
+    private var isFetching = false
 
     fun fetchData() {
-        _users.value = NetworkState.Loading()
+        if (isFetching) return
 
         viewModelScope.launch {
+            isFetching = true
+            _users.value = NetworkState.Loading
             val result = useCase.invoke()
-            result.onSuccess { users ->
-                _users.value = NetworkState.Success(users)
-            }.onFailure { error ->
-                _users.value = NetworkState.Error(error)
-            }
+            _users.value = result.fold(
+                onSuccess = { NetworkState.Success(it) },
+                onFailure = { NetworkState.Error(it) }
+            )
+            isFetching = false
         }
     }
 }

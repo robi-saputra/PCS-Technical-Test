@@ -68,6 +68,7 @@ dependencies {
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
     implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.splashscreen)
     implementation(libs.jakewharton.threetenabp)
 
     ksp(libs.google.dagger.compiler)
@@ -77,6 +78,7 @@ dependencies {
     testImplementation(libs.androidx.arch.core)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.inline)
     testImplementation(libs.mockito.kotlin)
     testImplementation(libs.mockito.android)
     testImplementation(libs.io.mockk)

@@ -32,4 +32,12 @@
         <item name="android:paddingTop">4dp</item>
         <item name="android:paddingBottom">4dp</item>
     </style>
+
+    <style name="Theme.TechnicalTest.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/colorBackground</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_android</item>
+        <item name="windowSplashScreenAnimationDuration">3000</item>
+        <item name="exitAnim">@anim/splash_exit</item>
+        <item name="postSplashScreenTheme">@style/Theme.TechnicalTest</item>
+    </style>
 </resources>

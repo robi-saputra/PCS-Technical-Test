@@ -65,7 +65,7 @@ class ListUserFragment: BaseFragment<FragmentUserListBinding>() {
             rvListUsers.layoutManager = layoutManager
             rvListUsers.adapter = adapter
             rvListUsers.isNestedScrollingEnabled = true
-            nestedScrollView.setOnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
+            nestedScrollView.setOnScrollChangeListener { _, _, _, _, _ ->
                 val bottomReached = !nestedScrollView.canScrollVertically(1) // Check if at the bottom
                 if (bottomReached) {
                     binding.footerShimmerLayout.visibility = View.VISIBLE
@@ -99,34 +99,32 @@ class ListUserFragment: BaseFragment<FragmentUserListBinding>() {
 
                         is NetworkState.Success -> {
                             val userList = state.data
-                            if (userList != null) {
-                                binding.shimmerLayout.visibility = View.GONE
-                                binding.exceptionLayout.visibility = View.GONE
-                                binding.shimmerLayout.stopShimmer()
-                                binding.rvListUsers.visibility = View.VISIBLE
-                                allData = userList as MutableList<User>
-                                withContext(Dispatchers.Main) {
-                                    loadNextPage() // Load the first page
-                                }
+                            binding.shimmerLayout.visibility = View.GONE
+                            binding.exceptionLayout.visibility = View.GONE
+                            binding.shimmerLayout.stopShimmer()
+                            binding.rvListUsers.visibility = View.VISIBLE
+                            allData = userList as MutableList<User>
+                            withContext(Dispatchers.Main) {
+                                loadNextPage() // Load the first page
                             }
                         }
 
                         is NetworkState.Error -> {
-                            Log.e("TAG", "Error: ${state.message?.message}")
+                            Log.e("TAG", "Error: ${state.exception.message}")
                             binding.exceptionLayout.visibility = View.VISIBLE
                             binding.rvListUsers.visibility = View.GONE
                             binding.shimmerLayout.visibility = View.GONE
                             binding.tvTittle.text = "Network Error"
-                            binding.tvDescription.text = "${state.message?.message}"
+                            binding.tvDescription.text = "${state.exception.message}"
                         }
 
                         else -> {
-                            Log.e("TAG", "Error: ${state.message?.message}")
+                            Log.e("TAG", "Error: $state")
                             binding.exceptionLayout.visibility = View.VISIBLE
                             binding.rvListUsers.visibility = View.GONE
                             binding.shimmerLayout.visibility = View.GONE
                             binding.tvTittle.text = "Unknown Error"
-                            binding.tvDescription.text = "${state.message?.message}"
+                            binding.tvDescription.text = "Undefined Error Occurred"
                         }
                     }
                 }
